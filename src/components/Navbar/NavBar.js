@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -6,49 +6,61 @@ import { makeStyles } from "@material-ui/core/styles";
 import CameraIcon from "@material-ui/icons/PhotoCamera";
 
 const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
+  root: {
+    // width: "20%",
+    // backgroundColor: "none",
+    "& .MuiPaper-elevation4": {
+      boxShadow: "none",
+    },
+
+    "& .MuiAppBar-colorPrimary": {
+      // backgroundColor: "transparent",
+      // color: "black",
+    },
   },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
+
+  backgroundTransparent: {
+    backgroundColor: "transparent",
+    color: "black",
   },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-  },
-  cardMedia: {
-    paddingTop: "56.25%", // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
+  backgroundColor: {
+    backgroundColor: "red",
+    color: "black",
   },
 }));
 const NavBar = () => {
+  const [navBackGround, setNavBackGround] = useState("backgroundTransparent");
   const classes = useStyles();
+  const appRef = useRef(null);
+  appRef.current = navBackGround;
 
+  useEffect(() => {
+    function handleScroll() {
+      if (window.scrollY > 50) {
+        setNavBackGround("backgroundColor");
+      } else {
+        setNavBackGround("backgroundTransparent");
+      }
+    }
+
+    document.addEventListener("scroll", handleScroll);
+
+    return () => {
+      document.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <>
-      <AppBar position="relative">
-        <Toolbar>
-          <CameraIcon className={classes.icon} />
-          <Typography variant="h6" color="inherit" noWrap>
-            Album layout
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <div className={classes.root}>
+        <AppBar position="fixed" className={classes[appRef.current]}>
+          <Toolbar>
+            <CameraIcon className={classes.icon} />
+            <Typography variant="h6" color="inherit" noWrap>
+              Album layout
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </div>
     </>
   );
 };

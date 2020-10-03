@@ -64,10 +64,10 @@ export default function Album() {
   return (
     <React.Fragment>
       {/* <CssBaseline /> */}
-      
+
       <main>
         {/* Hero unit */}
-        <div className={classes.heroContent}>
+        {/* <div className={classes.heroContent}>
           <Container maxWidth="sm">
             <Typography
               component="h1"
@@ -103,12 +103,12 @@ export default function Album() {
               </Grid>
             </div>
           </Container>
-        </div>
-        <Container className={classes.cardGrid} maxWidth="md">
+        </div> */}
+        <Container className={classes.cardGrid} maxWidth="lg">
           {/* End hero unit */}
-          <Grid container spacing={4}>
+          <Grid container spacing={2}>
             {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+              <Grid item key={card} xs={12} sm={6} md={3}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
