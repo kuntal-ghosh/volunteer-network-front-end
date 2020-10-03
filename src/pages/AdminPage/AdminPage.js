@@ -17,6 +17,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import RegisterListMain from "./RegisterList_main";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -73,7 +74,13 @@ function AdminPage(props) {
   const drawer = (
     <div>
       <div className={classes.toolbar}>
-        <img src="/logos/Group 1329.png" alt="logo" style={{ width: "80%" }} />
+        <Link to="/">
+          <img
+            src="/logos/Group 1329.png"
+            alt="logo"
+            style={{ width: "80%" }}
+          />
+        </Link>
       </div>
       <Divider />
       <List>
