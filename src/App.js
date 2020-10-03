@@ -7,6 +7,7 @@ import Footer from "./components/Footer/Footer";
 import NavBar from "./components/Navbar/NavBar";
 import MyEvents from "./pages/MyEvents/MyEvents";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import AdminPage from "./pages/AdminPage/AdminPage";
 function App() {
   return (
     <>
@@ -20,7 +21,10 @@ function App() {
             <EventRegister />
           </Route>
           <Route path="/my-events">
-            <MyEvents/>
+            <MyEvents />
+          </Route>
+          <Route path="/admin">
+            <AdminPage />
           </Route>
           <Route path="/">
             <HomePage />
