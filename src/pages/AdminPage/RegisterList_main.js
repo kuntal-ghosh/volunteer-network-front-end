@@ -34,7 +34,7 @@ export default function RegisterListMain() {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" >
       <TableContainer component={Paper} className={classes.paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>

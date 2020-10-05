@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,6 +14,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import SocialLoginButton from "../../components/SignIn/Social_Login_Button/Social_Login_Button";
 import { sizing } from "@material-ui/system";
+import userContext from "../../Context/userContext";
+import * as firebase from "../../services/firebase.auth";
+import { useLocation, useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -50,6 +53,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const [loginUser, setLoginUser] = useContext(userContext);
+  const [loggedUser, setLoogedUser] = useState({});
+  const location = useLocation();
+
+  const history = useHistory();
+  let { from } = location.state || { from: { pathname: "/" } };
+  console.log("from");
+  console.log(from);
 
   return (
     <Container component="main" maxWidth="sm">
@@ -95,7 +106,7 @@ export default function SignIn() {
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} onClick={googleSignIN}>
               <SocialLoginButton
                 imageUrl="/images/google.png"
                 buttonText="Continue with Google"
@@ -118,4 +129,34 @@ export default function SignIn() {
       </Box>
     </Container>
   );
+
+  async function googleSignIN() {
+    console.log("google clicked");
+    // let newUser = { ...loggedUser };
+
+    try {
+      const { user } = await firebase.signinWithGoogle();
+      console.log(user);
+      if (user) {
+        
+        console.log(user);
+
+        // newUser.password = user.password;
+        // setloggedInUser(user);
+
+        setLoginUser(user);
+        // setUser(newUser);
+        setLoogedUser(user);
+        console.log("logged in");
+        console.log(user);
+        console.log(from);
+        // authenticate();
+        history.push(from);
+      }
+    } catch (e) {
+      console.log(e.message);
+      // newUser.error.message = e.message;
+      // setUser(newUser);
+    }
+  }
 }

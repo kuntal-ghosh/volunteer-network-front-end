@@ -7,6 +7,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
+import ListIcon from "@material-ui/icons/List";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -17,8 +18,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import RegisterListMain from "./RegisterList_main";
+import AddEvent from "./AddEvent";
 import { Link } from "react-router-dom";
-
+import AddIcon from "@material-ui/icons/Add";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -59,11 +61,17 @@ function AdminPage(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [drawerItem, setDrawerItem] = useState(1);
+  const [drawerItem, setDrawerItem] = useState(0);
+  const [drawerText, setDrawerText] = useState("Volunteer List");
 
   let mainView = () => {
-    if (drawerItem === 1) {
+    if (drawerItem === 0) {
+      // setDrawerText("");
+
       return <RegisterListMain />;
+    }
+    if (drawerItem === 1) {
+      return <AddEvent />;
     }
   };
 
@@ -71,6 +79,10 @@ function AdminPage(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  function handleDrawerItemClick(text, index) {
+    setDrawerItem(index);
+    setDrawerText(text);
+  }
   const drawer = (
     <div>
       <div className={classes.toolbar}>
@@ -84,17 +96,21 @@ function AdminPage(props) {
       </div>
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
+        {["Volunteer List", "Add Event"].map((text, index) => (
+          <ListItem
+            button
+            key={text}
+            onClick={() => handleDrawerItemClick(text, index)}
+          >
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              {index % 2 === 0 ? <ListIcon /> : <AddIcon />}
             </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
       </List>
       <Divider />
-      <List>
+      {/* <List>
         {["All mail", "Trash", "Spam"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
@@ -103,7 +119,7 @@ function AdminPage(props) {
             <ListItemText primary={text} />
           </ListItem>
         ))}
-      </List>
+      </List> */}
     </div>
   );
 
@@ -125,7 +141,7 @@ function AdminPage(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Responsive drawer
+            {drawerText}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -160,7 +176,7 @@ function AdminPage(props) {
           </Drawer>
         </Hidden>
       </nav>
-      <main className={classes.content}>
+      <main className={classes.content} style={{ paddingTop: "70px" }}>
         {/* <div className={classes.toolbar} /> */}
         {mainView()}
       </main>

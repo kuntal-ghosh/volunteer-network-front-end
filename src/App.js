@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./App.module.scss";
 import HomePage from "./pages/HomePage/HomePage";
 import EventRegister from "./pages/EventRegister/EventRegister";
@@ -8,31 +8,38 @@ import NavBar from "./components/Navbar/NavBar";
 import MyEvents from "./pages/MyEvents/MyEvents";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import AdminPage from "./pages/AdminPage/AdminPage";
+import userContext from "./Context/userContext";
+import PrivateRoute from "./Route/PrivateRoute";
 function App() {
+  const [loginUser, setLoginUser] = useState({});
+  console.log("logged in user");
+  console.log(loginUser);
   return (
     <>
-      <NavBar />
-      <main className={styles.App}>
-        <Switch>
-          <Route path="/signin">
-            <SignIn />
-          </Route>
-          <Route path="/register-to-event">
-            <EventRegister />
-          </Route>
-          <Route path="/my-events">
-            <MyEvents />
-          </Route>
-          <Route path="/admin">
-            <AdminPage />
-          </Route>
-          <Route path="/">
-            <HomePage />
-          </Route>
-        </Switch>
-      </main>
+      <userContext.Provider value={[loginUser, setLoginUser]}>
+        <NavBar />
+        <main className={styles.App}>
+          <Switch>
+            <Route path="/signin">
+              <SignIn />
+            </Route>
+            <PrivateRoute user={loginUser} path="/register-to-event/:_id">
+              <EventRegister />
+            </PrivateRoute>
+            <Route path="/my-events">
+              <MyEvents />
+            </Route>
+            <Route path="/admin">
+              <AdminPage />
+            </Route>
+            <Route path="/">
+              <HomePage />
+            </Route>
+          </Switch>
+        </main>
 
-      {/* <Footer /> */}
+        {/* <Footer /> */}
+      </userContext.Provider>
     </>
   );
 }

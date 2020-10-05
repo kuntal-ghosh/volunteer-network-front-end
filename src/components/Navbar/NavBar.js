@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -15,6 +15,7 @@ import Menu from "@material-ui/core/Menu";
 import { Box } from "@material-ui/core";
 import Hidden from "@material-ui/core/Hidden";
 import { Link } from "react-router-dom";
+import userContext from "../../Context/userContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,6 +67,8 @@ const NavBar = () => {
   const open = Boolean(anchorEl);
 
   appRef.current = navBackGround;
+
+  const [loginUser, setLoginUser] = useContext(userContext);
 
   useEffect(() => {
     function handleScroll() {
@@ -149,7 +152,7 @@ const NavBar = () => {
                   </Link>
                 </Typography>
               </Box>
-              {auth && (
+              {loginUser && loginUser.displayName ? (
                 <div>
                   <IconButton
                     aria-label="account of current user"
@@ -179,6 +182,15 @@ const NavBar = () => {
                     <MenuItem onClick={handleClose}>My account</MenuItem>
                   </Menu>
                 </div>
+              ) : (
+                <Typography variant="h6" className={classes.menu}>
+                  <Link
+                    to="/signin"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Login
+                  </Link>
+                </Typography>
               )}
             </Hidden>
             {/* <div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -9,8 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
-
+import { Link } from "react-router-dom";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   cardMedia: {
-    paddingTop: "56.25%", // 16:9
+    paddingTop: "80%", // 16:9
   },
   cardContent: {
     flexGrow: 1,
@@ -61,6 +60,31 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Album() {
   const classes = useStyles();
+
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    async function getEvents() {
+      try {
+        const events = await (
+          await fetch(
+            "https://volunteernetworkbackend.herokuapp.com/api/events"
+          )
+        ).json();
+
+        setEvents(events);
+        console.log("events");
+        console.log(events);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getEvents();
+
+    // return () => {
+    //   cleanup
+    // }
+  }, []);
 
   return (
     <React.Fragment>
@@ -108,27 +132,31 @@ export default function Album() {
         <Container className={classes.cardGrid} maxWidth="lg">
           {/* End hero unit */}
           <Grid container spacing={2}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={3}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="h2"
-                      align="center"
-                    >
-                      Heading
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+            {events.length > 0 &&
+              events.map((card) => (
+                <Grid item key={card} xs={12} sm={6} md={3}>
+                  <Link to={`/register-to-event/${card._id}`}>
+                    <Card className={classes.card}>
+                      <CardMedia
+                        className={classes.cardMedia}
+                        // image="https://source.unsplash.com/random"
+                        image={`/images/${card.image}.png`}
+                        title="Image title"
+                      />
+                      <CardContent className={classes.cardContent}>
+                        <Typography
+                          gutterBottom
+                          variant="h5"
+                          component="h2"
+                          align="center"
+                        >
+                          {card.title}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </Grid>
+              ))}
           </Grid>
         </Container>
       </main>
