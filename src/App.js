@@ -23,10 +23,10 @@ function App() {
             <Route path="/signin">
               <SignIn />
             </Route>
-            <Route user={loginUser} path="/register-to-event/:_id">
+            <PrivateRoute user={loginUser} path="/register-to-event/:_id">
               <EventRegister />
-            </Route>
-            <Route path="/my-events">
+            </PrivateRoute>
+            <Route path="/my-events/:name">
               <MyEvents />
             </Route>
             <Route path="/admin">

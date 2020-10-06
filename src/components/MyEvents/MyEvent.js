@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MyEvents() {
+export default function MyEvents({ event }) {
   const classes = useStyles();
 
   return (
@@ -56,7 +56,7 @@ export default function MyEvents() {
               <img
                 className={classes.img}
                 alt="complex"
-                src="/static/images/grid/complex.jpg"
+                src={`/images/${event.image}.png`}
               />
             </ButtonBase>
           </Grid>
@@ -64,13 +64,13 @@ export default function MyEvents() {
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
                 <Typography gutterBottom variant="subtitle1">
-                  Standard license
+                  {event.title}
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  Full resolution 1920x1080 • JPEG
+                  {event.date}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  ID: 1030114
+                  {event.description}
                 </Typography>
               </Grid>
               {/* <Grid item>

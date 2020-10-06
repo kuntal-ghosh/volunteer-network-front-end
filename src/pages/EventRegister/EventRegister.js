@@ -64,7 +64,7 @@ export default function EventRegister() {
     email: "",
     date: new Date(),
     description: "",
-    event: "",
+    event: {},
     error: {},
   });
   console.log("eventData");
@@ -74,7 +74,7 @@ export default function EventRegister() {
   const { _id } = useParams();
 
   useEffect(() => {
-    async function getEvents() {
+    async function getEvent() {
       try {
         const event = await (
           await fetch(
@@ -88,7 +88,7 @@ export default function EventRegister() {
         console.log(error);
       }
     }
-    getEvents();
+    getEvent();
 
     // return () => {
     //   cleanup
@@ -247,7 +247,7 @@ export default function EventRegister() {
     let newEventData = { ...eventData };
     newEventData.email = loginUser.email;
     newEventData.name = loginUser.displayName;
-    newEventData.event = events.title;
+    newEventData.event = events;
 
     // const newBooking = { ...eventData };
     let errors;
@@ -277,7 +277,7 @@ export default function EventRegister() {
           // let json = result.json();
           // console.log("json");
           // console.log(json);
-          history.push(`/my-events`);
+          history.push(`/my-events/${loginUser.displayName}`);
         }
       } catch (error) {
         console.log("error");
