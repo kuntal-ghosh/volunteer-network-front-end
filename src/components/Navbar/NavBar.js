@@ -95,7 +95,7 @@ const NavBar = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleLogout = () => {
     setAnchorEl(null);
     const response = firebase.signout();
     console.log("response delete");
@@ -106,6 +106,10 @@ const NavBar = () => {
       setLoginUser({});
     }
   };
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
 
   return (
     <>
@@ -187,8 +191,16 @@ const NavBar = () => {
                     open={open}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={handleClose}>My Events</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <Link
+                        to="/my-events"
+                        style={{ cursor: "pointer", textDecoration: "none" }}
+                      >
+                        My Events
+                      </Link>
+                    </MenuItem>
+
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </Menu>
                 </div>
               ) : (
