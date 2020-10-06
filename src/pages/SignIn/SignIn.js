@@ -151,7 +151,7 @@ export default function SignIn() {
         console.log(user);
         console.log(from);
         // authenticate();
-        history.push(from);
+        history.replace(from);
       }
     } catch (e) {
       console.log(e.message);

@@ -277,7 +277,7 @@ export default function EventRegister() {
           // let json = result.json();
           // console.log("json");
           // console.log(json);
-          history.push(`/my-events/${loginUser.displayName}`);
+          history.replace(`/my-events`);
         }
       } catch (error) {
         console.log("error");

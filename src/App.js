@@ -26,7 +26,7 @@ function App() {
             <PrivateRoute user={loginUser} path="/register-to-event/:_id">
               <EventRegister />
             </PrivateRoute>
-            <Route path="/my-events/:name">
+            <Route path="/my-events">
               <MyEvents />
             </Route>
             <Route path="/admin">

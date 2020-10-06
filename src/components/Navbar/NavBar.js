@@ -16,6 +16,7 @@ import { Box } from "@material-ui/core";
 import Hidden from "@material-ui/core/Hidden";
 import { Link } from "react-router-dom";
 import userContext from "../../Context/userContext";
+import * as firebase from "../../services/firebase.auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -96,6 +97,14 @@ const NavBar = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+    const response = firebase.signout();
+    console.log("response delete");
+    console.log(response);
+    if (response) {
+      console.log("response delete");
+      console.log(response);
+      setLoginUser({});
+    }
   };
 
   return (
@@ -178,8 +187,8 @@ const NavBar = () => {
                     open={open}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                    <MenuItem onClick={handleClose}>My Events</MenuItem>
+                    <MenuItem onClick={handleClose}>Logout</MenuItem>
                   </Menu>
                 </div>
               ) : (

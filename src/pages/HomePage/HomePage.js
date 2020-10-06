@@ -135,7 +135,10 @@ export default function Album() {
             {events.length > 0 &&
               events.map((card) => (
                 <Grid item key={card} xs={12} sm={6} md={3}>
-                  <Link to={`/register-to-event/${card._id}`}>
+                  <Link
+                    to={`/register-to-event/${card._id}`}
+                    style={{ cursor: "pointer", textDecoration: "none" }}
+                  >
                     <Card className={classes.card}>
                       <CardMedia
                         className={classes.cardMedia}

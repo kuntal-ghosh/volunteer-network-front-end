@@ -103,7 +103,7 @@ export default function MyEvents({ user, setUser }) {
       if (result) {
         console.log(result);
 
-        setUser([]);
+        setUser({});
       }
     } catch (error) {
       console.log("error");
