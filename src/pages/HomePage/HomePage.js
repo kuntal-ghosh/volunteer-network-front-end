@@ -14,9 +14,10 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
+      {/* <Link color="inherit" href="https://material-ui.com/">
         Your Website
-      </Link>
+      </Link> */}
+      Your Website
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -134,7 +135,7 @@ export default function Album() {
           <Grid container spacing={2}>
             {events.length > 0 &&
               events.map((card) => (
-                <Grid item key={card} xs={12} sm={6} md={3}>
+                <Grid item key={card._id} xs={12} sm={6} md={3}>
                   <Link
                     to={`/register-to-event/${card._id}`}
                     style={{ cursor: "pointer", textDecoration: "none" }}
@@ -143,7 +144,11 @@ export default function Album() {
                       <CardMedia
                         className={classes.cardMedia}
                         // image="https://source.unsplash.com/random"
-                        image={`/images/${card.image}.png`}
+                        image={
+                          card.image
+                            ? `/images/${card.image}.png`
+                            : "/images/babySit.png"
+                        }
                         title="Image title"
                       />
                       <CardContent className={classes.cardContent}>
