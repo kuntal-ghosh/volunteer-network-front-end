@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles({
   table: {
@@ -33,29 +34,57 @@ const rows = [
 export default function RegisterListMain() {
   const classes = useStyles();
 
+  const [volunteers, setVolunteers] = useState([]);
+  const [afterDelete, setAfterDelete] = useState({});
+  useEffect(() => {
+    async function getVolunteers() {
+      let result = await (
+        await fetch(
+          "https://volunteernetworkbackend.herokuapp.com/api/volunteers"
+        )
+      ).json();
+      if (result.length > 0) {
+        setVolunteers(result);
+      }
+    }
+
+    try {
+      getVolunteers();
+    } catch (error) {
+      console.log(error);
+    }
+    // return () => {
+    //   cleanup
+    // }
+  }, [afterDelete]);
+
   return (
-    <Container maxWidth="lg" >
+    <Container maxWidth="lg">
       <TableContainer component={Paper} className={classes.paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Calories</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Event </TableCell>
+              <TableCell>Action </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.name}>
+            {volunteers.map((row) => (
+              <TableRow key={row._id}>
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
+                <TableCell>{row.email}</TableCell>
+                <TableCell>{row.date}</TableCell>
+                <TableCell>{row.description}</TableCell>
+                <TableCell>{row.event.title}</TableCell>
+                <TableCell style={{ cursor: "pointer", color: "tomato" }}>
+                  <DeleteIcon onClick={() => handleDelete(row._id)} />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -63,4 +92,22 @@ export default function RegisterListMain() {
       </TableContainer>
     </Container>
   );
+
+  async function handleDelete(id) {
+    try {
+      let result = await fetch(
+        "https://volunteernetworkbackend.herokuapp.com/api/volunteers/delete/" +
+          id,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (result) {
+        setAfterDelete({});
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
