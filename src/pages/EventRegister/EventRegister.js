@@ -14,6 +14,13 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import userContext from "../../Context/userContext";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/moment";
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -50,11 +57,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EventRegister() {
   const classes = useStyles();
+  const history = useHistory();
 
+  const [eventData, setEventData] = useState({
+    name: "",
+    email: "",
+    date: new Date(),
+    description: "",
+    event: "",
+    error: {},
+  });
+  console.log("eventData");
+  console.log(eventData);
   const [loginUser, setLoginUser] = useContext(userContext);
   const [events, setEvents] = useState({});
   const { _id } = useParams();
-  console.log(_id);
+
   useEffect(() => {
     async function getEvents() {
       try {
@@ -63,10 +81,9 @@ export default function EventRegister() {
             `https://volunteernetworkbackend.herokuapp.com/api/events/findone/${_id}`
           )
         ).json();
-
-        setEvents(event);
-        console.log("event");
-        console.log(event);
+        if (event) {
+          setEvents(event);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -96,7 +113,7 @@ export default function EventRegister() {
         {/* <Typography component="h1" variant="h5">
           Sign up
         </Typography> */}
-        <form className={classes.form} noValidate>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -123,15 +140,52 @@ export default function EventRegister() {
               />
             </Grid>
             <Grid item xs={12}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  required
+                  // disableToolbar
+                  variant="inline"
+                  // clearLabel
+                  autoOk
+                  format="L"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="From"
+                  className={classes.datepicker}
+                  // value={selectedDate}
+                  style={{ paddingRight: 4, width: "100%" }}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date",
+                  }}
+                  name="date"
+                  // value={}
+                  value={eventData.date}
+                  onChange={(date) => handleStartDateChange(date)}
+
+                  // minDate=
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+            <Grid item xs={12}>
               <TextField
+                // variant="outlined"
+                // multiline
+                // required
+                // fullWidth
+                // id="description"
+                // label="Description"
+                name="description"
+                // autoComplete="description"
+                value={eventData.description}
+                onChange={handleChange}
+                id="outlined-multiline-static"
+                label="Description"
+                // required
+                multiline
+                rows={4}
+                // defaultValue="Default Value"
                 variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+                style={{ width: "100%" }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -139,21 +193,10 @@ export default function EventRegister() {
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id="event"
+                label="Event Name"
+                name="event"
+                autoComplete="event"
                 value={events.title}
                 InputLabelProps={{
                   shrink: true,
@@ -190,4 +233,72 @@ export default function EventRegister() {
       </Box>
     </Container>
   );
+
+  function handleStartDateChange(date) {
+    const newBooking = { ...eventData };
+    newBooking.date = date;
+    // setBooking(newBooking);
+    setEventData(newBooking);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    let newEventData = { ...eventData };
+    newEventData.email = loginUser.email;
+    newEventData.name = loginUser.displayName;
+    newEventData.event = events.title;
+
+    // const newBooking = { ...eventData };
+    let errors;
+    if (newEventData.error) {
+      errors = Object.keys(eventData.error).length > 0;
+    }
+    if (!errors) {
+      try {
+        let result = await fetch(
+          "https://volunteernetworkbackend.herokuapp.com/api/volunteers/add",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(newEventData),
+          }
+        );
+
+        if (result.statusText === "OK") {
+          console.log("success");
+          console.log(result);
+
+          console.log(result.statusText);
+
+          // let json = result.json();
+          // console.log("json");
+          // console.log(json);
+          history.push(`/my-events`);
+        }
+      } catch (error) {
+        console.log("error");
+        console.log(error);
+      }
+      // setBooking(newBooking);
+      // setBooked(newBooking);
+      // setEventData(newEventData);
+    }
+  }
+  function handleChange(e) {
+    const newBooking = { ...eventData };
+    if (e.target.value === "") {
+      newBooking.error[e.target.name] = `${e.target.name} is required`;
+    } else {
+      if (newBooking.error) {
+        delete newBooking.error[e.target.name];
+      }
+    }
+    newBooking[e.target.name] = e.target.value;
+    // setBooking(newBooking);
+    setEventData(newBooking);
+  }
 }
