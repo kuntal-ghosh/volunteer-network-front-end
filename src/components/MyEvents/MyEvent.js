@@ -44,9 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MyEvents({ event }) {
+export default function MyEvents({ user, setUser }) {
   const classes = useStyles();
-
+  const { event } = user;
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -80,7 +80,7 @@ export default function MyEvents({ event }) {
               </Grid> */}
             </Grid>
             <Grid item className={classes.cancel}>
-              <Typography element="p" variant="subtitle1">
+              <Typography element="p" variant="subtitle1" onClick={deleteEvent}>
                 Cancel
               </Typography>
             </Grid>
@@ -89,4 +89,25 @@ export default function MyEvents({ event }) {
       </Paper>
     </div>
   );
+
+  async function deleteEvent() {
+    console.log("clicked");
+    try {
+      let result = await fetch(
+        "https://volunteernetworkbackend.herokuapp.com/api/volunteers/delete/" +
+          user._id,
+        {
+          method: "DELETE",
+        }
+      );
+      if (result) {
+        console.log(result);
+
+        setUser([]);
+      }
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+    }
+  }
 }

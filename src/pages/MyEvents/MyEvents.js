@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 const MyEvents = () => {
   const classes = useStyles();
   const [loginUser, setLoginUser] = useContext(userContext);
-  const [user, setuser] = useState([]);
+  const [user, setUser] = useState([]);
 
   useEffect(() => {
     async function getuser() {
@@ -25,11 +25,11 @@ const MyEvents = () => {
       ).json();
 
       console.log(result);
-      setuser(result);
+      setUser(result);
     }
 
     getuser();
-  }, [loginUser]);
+  }, [loginUser,user]);
   return (
     <>
       <Container className={classes.root} maxWidth="md">
@@ -37,7 +37,7 @@ const MyEvents = () => {
           {user &&
             user.map((user) => (
               <Grid item md={6}>
-                <MyEvent event={user.event} />
+                <MyEvent user={user} setUser={setUser} />
               </Grid>
             ))}
         </Grid>
